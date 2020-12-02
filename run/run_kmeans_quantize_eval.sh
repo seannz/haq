@@ -5,4 +5,4 @@ python -W ignore finetune.py     \
  --workers 32                    \
  --test_batch 512                \
  --free_high_bit False           \
- --eval                          \
+ --evaluate                      \

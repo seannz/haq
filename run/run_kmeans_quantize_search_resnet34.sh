@@ -1,5 +1,5 @@
 python -W ignore rl_quantize.py     \
- --arch resnet50                    \
+ --arch resnet34                    \
  --dataset imagenet                 \
  --suffix ratio010                  \
  --preserve_ratio 0.1               \
