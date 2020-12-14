@@ -102,7 +102,7 @@ def quantize_model(model, quantize_index, quantize_bits, max_iter=50, mode='cpu'
 
 
 def kmeans_update_model(model, quantizable_idx, centroid_label_dict, free_high_bit=False):
-    for i, layer in enumerate(model.modules()):
+    for i, layer in enumerate(model.module.modules()):
         if i not in quantizable_idx:
             continue
         new_weight_data = layer.weight.data.clone()

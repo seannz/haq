@@ -95,6 +95,9 @@ parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
 parser.add_argument('--gpu_id', default='1', type=str,
                     help='id(s) for CUDA_VISIBLE_DEVICES')
 
+# Bitrate
+parser.add_argument('--bitrate', type=int, default=1)
+
 args = parser.parse_args()
 state = {k: v for k, v in args._get_kwargs()}
 lr_current = state['lr']
@@ -335,9 +338,19 @@ if __name__ == '__main__':
         print(quantizable_idx)
 
         if args.arch.startswith('resnet50'):
-            # resnet50 ratio 10%
-            strategy = [6, 6, 6, 6, 5, 5, 6, 5, 5, 6, 5, 5, 6, 5, 5, 5, 5, 5, 4, 5, 4, 4, 5, 4, 4, 4, 3, 4,
-                        4, 4, 3, 4, 4, 3, 4, 4, 3, 4, 4, 3, 4, 4, 3, 4, 3, 3, 2, 3, 2, 3, 3, 2, 3, 4]
+            if not args.linear_quantization:
+                if args.bitrate == 3:
+                    # resnet50 ratio 10%
+                    strategy = [6, 6, 6, 6, 5, 5, 6, 5, 5, 6, 5, 5, 6, 5, 5, 5, 5, 5, 4, 5, 4, 4, 5, 4, 4, 4, 3, 4,
+                                4, 4, 3, 4, 4, 3, 4, 4, 3, 4, 4, 3, 4, 4, 3, 4, 3, 3, 2, 3, 2, 3, 3, 2, 3, 4]
+        elif args.arch.startswith('resnet34'):
+            if not args.linear_quantization:
+                if args.bitrate == 1:
+                    strategy = [5, 3, 3, 3, 3, 3, 3, 4, 2, 4, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                elif args.bitrate == 2:
+                    strategy = [8, 7, 6, 4, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 3, 2, 2, 1, 1, 7]
+                elif args.bitrate == 3:
+                    strategy = [4, 7, 8, 8, 8, 8, 8, 7, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 4, 3, 3, 3, 3, 3, 4, 3, 3, 2, 2, 2, 2, 7]
         else:
             # you can put your own strategy here
             raise NotImplementedError
